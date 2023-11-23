@@ -10,22 +10,22 @@ const counterSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    sighInStart: (state) => {
+    signInStart: (state) => {
       state.loading = true;
     },
-    sighInSuccess: (state, action) => {
+    signInSuccess: (state, action) => {
       state.currentUser = action.payload;
       state.loading = false;
       state.error = null;
     },
-    sighInFailure: (state, action) => {
+    signInFailure: (state, action) => {
       state.error = action.payload;
       state.loading = false;
     },
   },
 });
 
-export const { sighInStart, sighInSuccess, sighInFailure } =
+export const { signInStart, signInSuccess, signInFailure } =
   counterSlice.actions;
 
 export default counterSlice.reducer;
