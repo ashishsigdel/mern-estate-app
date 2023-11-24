@@ -1,16 +1,78 @@
 import { useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../firebase";
 
 export default function Profile() {
   const { currentUser } = useSelector((state) => state.user);
+  const fileRef = useRef(null);
+  const [file, setFile] = useState(undefined);
+  const [filePerc, setFilePerc] = useState(0);
+  const [fileUploadError, setFileUploadError] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (file) {
+      handleFileUpload(file);
+    }
+  }, [file]);
+
+  const handleFileUpload = (file) => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + file.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFilePerc(Math.round(progress));
+      },
+      (error) => {
+        setFileUploadError(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, avatar: downloadURL })
+        );
+      }
+    );
+  };
   return (
     <div className="p-3 max-w-xl mx-auto">
       <h1 className="text-3xl text-center font-semibold my-5">Profile</h1>
       <form className="flex flex-col gap-4">
-        <img
-          src={currentUser.avatar}
-          alt="profile"
-          className="rounded-full w-24 h-24 object-cover mx-auto my-6"
+        <input
+          onChange={(e) => setFile(e.target.files[0])}
+          hidden
+          ref={fileRef}
+          type="file"
+          accept="image/*"
         />
+        <img
+          src={formData.avatar || currentUser.avatar}
+          onClick={() => fileRef.current.click()}
+          alt="profile"
+          className="rounded-full w-24 h-24 object-cover mx-auto mt-6 hover:scale-105 transition duration-500"
+        />
+        <p className="text-sm text-center">
+          {fileUploadError ? (
+            <span className="text-red-500">Error Image Upload!</span>
+          ) : filePerc > 0 && filePerc < 100 ? (
+            <span className="text-slate-800">{`Uploading ${filePerc}%`}</span>
+          ) : filePerc === 100 ? (
+            <span className="text-green-600">Image upload successfully.</span>
+          ) : (
+            ""
+          )}
+        </p>
         <input
           type="text"
           id="username"
