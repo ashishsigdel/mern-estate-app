@@ -312,7 +312,7 @@ export default function CreateListing() {
               <h1 className="font-semibold">Images: </h1>
               <span>The first image will be the cover(max 6)</span>
             </div>
-            <div className="flex gap-3 mt-5">
+            <div className="flex gap-3 mt-5 flex-wrap">
               <input
                 type="file"
                 id="images"
