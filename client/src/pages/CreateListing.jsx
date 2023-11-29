@@ -274,7 +274,7 @@ export default function CreateListing() {
               <input
                 type="number"
                 min={1}
-                max={10000000}
+                max={1000000000}
                 id="regularPrice"
                 className="p-3 rounded-lg "
                 required
@@ -291,7 +291,7 @@ export default function CreateListing() {
                 <input
                   type="number"
                   min={0}
-                  max={10000000}
+                  max={1000000000}
                   id="discountPrice"
                   className="p-3 rounded-lg "
                   required
