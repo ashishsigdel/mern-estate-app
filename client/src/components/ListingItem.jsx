@@ -25,7 +25,7 @@ export default function ListingItem({ listing }) {
           </div>
           <div className="my-3 flex justify-between">
             <p className="text-slate-700 font-semibold">
-              {"$ "}
+              {"Rs. "}
               {listing.discountPrice
                 ? `${(
                     listing.regularPrice - listing.discountPrice
