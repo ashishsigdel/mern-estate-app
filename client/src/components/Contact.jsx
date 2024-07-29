@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 export default function Contact({ listing }) {
   const [landlord, setLandlord] = useState(null);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState(undefined);
+  const [error, setError] = useState(undefined);
 
   const onChange = (e) => {
     setMessage(e.target.value);
@@ -21,8 +24,37 @@ export default function Contact({ listing }) {
     };
     fetchLandlord();
   }, [listing.userRef]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch("/api/user/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mailto: landlord.email,
+          subject: listing.name,
+          message: message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setLoading(false);
+        return;
+      }
+      setResponse(data.message);
+      setMessage("");
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    <>
+    <form onSubmit={handleSubmit}>
       {landlord && (
         <div className=" flex flex-col gap-2">
           <p>
@@ -41,14 +73,26 @@ export default function Contact({ listing }) {
             value={message}
             onChange={onChange}
           ></textarea>
-          <Link
+          {/* <Link
             to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
             className="bg-green-700 text-white uppercase rounded-lg p-3 text-center hover:bg-green-900 transition duration-500"
           >
             Sent Message
-          </Link>
+          </Link> */}
+          <button
+            type="submit"
+            disabled={loading}
+            // to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
+            className="bg-green-700 text-white uppercase rounded-lg p-3 text-center hover:bg-green-900 transition duration-500"
+          >
+            {loading ? "Loading..." : "Send Message"}
+          </button>
+          {response && (
+            <p className="text-green-500 font-semibold my-3">{response}</p>
+          )}
+          {error && <p className="text-red-500 font-semibold my-3">{error}</p>}
         </div>
       )}
-    </>
+    </form>
   );
 }
