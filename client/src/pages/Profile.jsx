@@ -20,6 +20,8 @@ import {
 } from "../redux/user/userSlice";
 import { Link } from "react-router-dom";
 import Listing from "../../../api/models/listing.model";
+import { MdLocationOn } from "react-icons/md";
+import { CgDanger } from "react-icons/cg";
 
 export default function Profile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -32,7 +34,7 @@ export default function Profile() {
   const [showListingsError, setShowListingsError] = useState(false);
   const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
-  console.log(formData);
+  const [editPassword, seteditPassword] = useState(false);
 
   useEffect(() => {
     if (file) {
@@ -153,7 +155,7 @@ export default function Profile() {
     }
   };
   return (
-    <div className="p-7 max-w-xl mx-auto">
+    <div className="p-7 max-w-xl mx-auto w-full">
       <h1 className="text-3xl text-center font-semibold my-5">Profile</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
@@ -167,7 +169,7 @@ export default function Profile() {
           src={formData.avatar || currentUser.avatar}
           onClick={() => fileRef.current.click()}
           alt="profile"
-          className="rounded-full w-24 h-24 object-cover mx-auto mt-6 hover:scale-105 transition duration-500"
+          className="rounded-full w-32 h-32 object-cover mx-auto mt-6 hover:scale-105 transition duration-500"
         />
         <p className="text-sm text-center">
           {fileUploadError ? (
@@ -180,101 +182,135 @@ export default function Profile() {
             ""
           )}
         </p>
-        <input
-          type="text"
-          id="username"
-          placeholder="username"
-          defaultValue={currentUser.username}
-          className="p-3 border rounded-lg "
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          id="email"
-          defaultValue={currentUser.email}
-          placeholder="email"
-          className="p-3 border rounded-lg "
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          id="password"
-          placeholder="password"
-          className="p-3 border rounded-lg "
-          onChange={handleChange}
-        />
+        <div className="flex flex-col gap-1">
+          <span className="text-sm">Username:</span>
+          <input
+            type="text"
+            id="username"
+            placeholder="username"
+            defaultValue={currentUser.username}
+            className="p-3 border rounded-lg "
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-sm">Email:</span>
+          <input
+            type="email"
+            id="email"
+            defaultValue={currentUser.email}
+            placeholder="email"
+            className="p-3 border rounded-lg "
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex gap-1 w-full">
+          {editPassword && (
+            <input
+              type="password"
+              id="password"
+              placeholder="New Password"
+              className="p-3 border rounded-lg w-full"
+              onChange={handleChange}
+            />
+          )}
+          {!editPassword && (
+            <button
+              onClick={() => seteditPassword(true)}
+              className="bg-slate-700 text-white p-3 rounded-lg uppercase font-semibold text-center hover:opacity-90 transition duration-500 w-full"
+            >
+              Change Password
+            </button>
+          )}
+        </div>
+        <p className="text-green-700 text-center">
+          {updateSuccess ? "Update successfully" : ""}
+        </p>
         <button
           disabled={loading}
           className="bg-slate-800 p-3 text-white uppercase font-semibold rounded-lg disabled:bg-slate-600 hover:bg-slate-900 transition duration-500 "
         >
           {loading ? "Loading..." : "Update"}
         </button>
-        <Link
-          to="/create-listing"
-          className="bg-blue-700 text-white p-3 rounded-lg uppercase font-semibold text-center hover:opacity-90 transition duration-500"
-        >
-          create listing
-        </Link>
       </form>
       <div className="flex justify-between p-3">
         <span
           onClick={handleDeleteUser}
-          className="text-red-600 cursor-pointer"
+          className="text-red-600 cursor-pointer flex gap-1 items-center"
         >
+          <CgDanger />
           Delete Account
         </span>
-        <span
+        {/* <span
           onClick={handleUserSignOut}
           className="text-red-600 cursor-pointer"
         >
           Sign Out
-        </span>
+        </span> */}
       </div>
       <p className="text-red-700 text-center">{error ? error : ""}</p>
-      <p className="text-green-700 text-center">
-        {updateSuccess ? "Update successfully" : ""}
-      </p>
-      <button onClick={handleShowListings} className="text-green-700 w-full ">
+
+      <div className="w-full flex gap-2"></div>
+
+      <button
+        onClick={handleShowListings}
+        className="w-full py-2 px-3 bg-green-500 rounded-md text-white"
+      >
         Show Listings
       </button>
       <p className="text-red-700 mt-5">
         {showListingsError ? "Error showing listings" : ""}
       </p>
       {userListings && userListings.length > 0 && (
-        <div className="">
-          <h1 className="text-xl font-semibold text-center mb-5 ">
+        <div className="w-full">
+          <h1 className="text-xl font-semibold text-center mb-5">
             Your listings:{" "}
           </h1>
           {userListings.map((listing) => (
             <div
               key={listing._id}
-              className="gap-4 flex border rounded-lg p-3 justify-between items-center my-2"
+              className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full "
             >
               <Link to={`/listing/${listing._id}`}>
                 <img
                   src={listing.imageUrls[0]}
-                  alt="listing-image-cover"
-                  className="w-16 h-16 object-contain rounded-lg"
+                  alt="result-banner"
+                  className="h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-500 "
                 />
               </Link>
-              <Link
-                to={`/listing/${listing._id}`}
-                className="text-slate-700 font-semibold flex-1 hover:underline transition duration-500 truncate"
-              >
-                <p>{listing.name}</p>
-              </Link>
-              <div className="flex flex-col items-center ">
-                <button
-                  onClick={() => handleListingDelete(listing._id)}
-                  className="text-red-700 uppercase text-sm"
-                >
-                  Delete
-                </button>
-                <Link to={`/update-listing/${listing._id}`}>
-                  <button className="text-green-700 uppercase text-sm">
-                    Edit
-                  </button>
+              <div className=" p-3">
+                <Link to={`/listing/${listing._id}`}>
+                  <p className="font-semibold text-slate-700 truncate">
+                    {listing.name}
+                  </p>
+                  <div className="flex items-center gap-1">
+                    <MdLocationOn className="text-green-800" />
+                    <p className="text-xs truncate text-slate-500">
+                      {listing.address}
+                    </p>
+                  </div>
+                  <div className="mt-1">
+                    <p className="text-xs text-slate-600 line-clamp-2">
+                      {listing.description}
+                    </p>
+                  </div>
                 </Link>
+
+                <div className="flex my-3 w-full gap-2 text-center">
+                  <div className="flex-1 rounded-md py-2 px-3 bg-red-500 text-white">
+                    <button
+                      onClick={() => handleListingDelete(listing._id)}
+                      className="uppercase text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                  <div className="flex-1 rounded-md py-2 px-3 bg-green-500 text-white">
+                    <Link to={`/update-listing/${listing._id}`}>
+                      <button className="uppercase text-sm">Edit</button>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           ))}

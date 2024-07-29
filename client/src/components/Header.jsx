@@ -1,12 +1,19 @@
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { IoLogOutOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
+import {
+  signOutUserStart,
+  signOutUserSuccess,
+  signOutUserFailure,
+} from "../redux/user/userSlice";
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,6 +30,21 @@ export default function Header() {
       setSearchTerm(searchTermFromUrl);
     }
   }, [location.search]);
+
+  const handleUserSignOut = async () => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await fetch("/api/auth/signout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message));
+        return;
+      }
+      dispatch(signOutUserSuccess(data));
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
+    }
+  };
   return (
     <header className="bg-slate-400 shadow-md">
       <div className="flex justify-between items-center p-3 mx-auto max-w-6xl">
@@ -49,13 +71,18 @@ export default function Header() {
         </form>
         <ul className="flex gap-4 ">
           <Link to="/">
-            <li className="hidden sm:inline text-slate-700 transition hover:text-slate-400 duration-500">
+            <li className="hidden sm:inline text-slate-700 transition hover:text-slate-500 duration-500">
               Home
             </li>
           </Link>
           <Link to="/about">
-            <li className="hidden sm:inline text-slate-700 transition hover:text-slate-400 duration-500">
+            <li className="hidden sm:inline text-slate-700 transition hover:text-slate-500 duration-500">
               About
+            </li>
+          </Link>
+          <Link to="/create-listing">
+            <li className="hidden sm:inline text-slate-700 transition hover:text-slate-500 duration-500">
+              Create
             </li>
           </Link>
           <Link to="/profile">
@@ -66,11 +93,19 @@ export default function Header() {
                 className="w-7 h-7 object-cover rounded-full"
               />
             ) : (
-              <li className="text-slate-700 transition hover:text-slate-400 duration-500">
+              <li className="text-slate-700 transition hover:text-slate-500 duration-500">
                 Sign In
               </li>
             )}
           </Link>
+          {currentUser && (
+            <div
+              onClick={handleUserSignOut}
+              className="text-slate-700 transition hover:text-slate-500 duration-500 flex items-center justify-center cursor-pointer"
+            >
+              <IoLogOutOutline className="text-2xl" />
+            </div>
+          )}
         </ul>
       </div>
     </header>

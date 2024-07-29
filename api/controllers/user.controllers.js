@@ -93,7 +93,10 @@ export const contactLandlord = async (req, res, next) => {
     const messageUrl = `<html>
     <head>
     <style>
-   
+   .message{
+   font-size : 22px;
+   font-weight: 500;
+   }
   </style>
     </head>
     <body>
@@ -101,7 +104,7 @@ export const contactLandlord = async (req, res, next) => {
     <h1>New message for ${subject} in MeroEstate</h1>
     <p>from ${user.email}</p>
     <p>Subject: Regarding ${subject}</p>
-    <p>
+    <p class="message">
       ${message}
     </p>
   </div>
