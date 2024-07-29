@@ -8,26 +8,35 @@ export default function About() {
           About Mero Estate
         </h1>
         <p className="mb-4 text-slate-700">
-          Mero Estate is a leading real estate agency that specializes in
-          helping clients buy, sell, and rent properties in the most desirable
-          neighborhoods. Our team of experienced agents is dedicated to
-          providing exceptional service and making the buying and selling
-          process as smooth as possible.
+          The MeroEstate website is crafted to deliver a seamless and
+          comprehensive platform for managing various operations within the real
+          estate sector. As the real estate industry continues to grow and
+          evolve, the necessity for a centralized system that efficiently
+          handles property listings, client interactions, and administrative
+          duties has become increasingly vital. MeroEstate addresses this need
+          by providing a powerful solution that simplifies real estate
+          processes, enhances user experience, and optimizes transaction
+          management.
         </p>
         <p className="mb-4 text-slate-700">
-          Our mission is to help our clients achieve their real estate goals by
-          providing expert advice, personalized service, and a deep
-          understanding of the local market. Whether you are looking to buy,
-          sell, or rent a property, we are here to help you every step of the
-          way.
+          In the modern real estate environment, effectively managing property
+          details, scheduling appointments, and coordinating with clients are
+          crucial for delivering top-notch service and maintaining operational
+          efficiency. Traditional methods often rely on disconnected systems,
+          manual processes, and heavy administrative work, which can result in
+          errors, delays, and inefficiencies. MeroEstate aims to resolve these
+          issues by offering a unified platform that automates routine tasks,
+          reduces administrative workload, and ensures the accurate and timely
+          flow of information across the platform.
         </p>
         <p className="mb-4 text-slate-700">
-          Our team of agents has a wealth of experience and knowledge in the
-          real estate industry, and we are committed to providing the highest
-          level of service to our clients. We believe that buying or selling a
-          property should be an exciting and rewarding experience, and we are
-          dedicated to making that a reality for each and every one of our
-          clients.
+          This web-based system includes two distinct panels: one for users
+          (buyers and sellers) and another for administrators (site staff). The
+          user panel allows sellers to list properties, provide detailed
+          descriptions, and manage their listings, while buyers can search for
+          properties, schedule viewings, and monitor their transactions. The
+          admin panel enables site staff to manage user accounts, oversee
+          property listings, and maintain the platform.
         </p>
       </div>
     </>
